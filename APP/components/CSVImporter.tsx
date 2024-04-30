@@ -6,10 +6,9 @@ import Papa from "papaparse";
 const CSVImporter: React.FC = () => {
     const [data, setData] = useState<string[][] | null>(null);
     const [headers, setHeaders] = useState<string[] | null>(null);
-    const [musician, setMusician] = useState<{
-        id: string;
-        name: string;
-    } | null>(null);
+    const [musicians, setMusicians] = useState<
+        Array<{ id: string; name: string }>
+    >([]);
 
     useEffect(() => {
         upsertMusicians();
@@ -32,7 +31,7 @@ const CSVImporter: React.FC = () => {
                         setHeaders(result.meta.fields ?? null);
                     },
                     header: true, // Indica que el archivo CSV tiene una fila de encabezado
-                    delimiter: ';' // Establece el delimitador correcto para tu CSV
+                    delimiter: ";", // Establece el delimitador correcto para tu CSV
                 });
             }
         };
@@ -55,7 +54,7 @@ const CSVImporter: React.FC = () => {
                 }
             });
 
-            setMusician(musicianData[0]);
+            setMusicians(musicianData);
         }
     };
 
@@ -65,22 +64,12 @@ const CSVImporter: React.FC = () => {
             <input type="file" onChange={handleFileChange} accept=".csv" />
             <div className="flex-1 my-10">
                 {/* Mostrar los datos del archivo CSV */}
-                {/* {data?.map((row, rowIndex) => (
-                    <div key={rowIndex}>
-                        {headers?.map((header, headerIndex) => (
-                            <div key={`${rowIndex}-${headerIndex}`}>
-                                <strong>{header}: </strong>
-                                {row[headerIndex]}
-                            </div>
-                        ))}
-                    </div>
-                ))} */}
-                {musician && (
-                    <>
+                {musicians.map((musician, index) => (
+                    <div key={index}>
                         <strong>{musician.id}</strong>
                         <p>{musician.name}</p>
-                    </>
-                )}
+                    </div>
+                ))}
             </div>
         </div>
     );
