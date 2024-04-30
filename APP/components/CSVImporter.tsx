@@ -11,7 +11,7 @@ const CSVImporter: React.FC = () => {
     >([]);
 
     useEffect(() => {
-        upsertMusicians();
+        musiciansFilter();
     }, [data]);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,25 +38,59 @@ const CSVImporter: React.FC = () => {
         reader.readAsText(file);
     };
 
-    const upsertMusicians = () => {
+    const eventsFilter = () => {
         if (data && headers) {
-            const musicianData: { id: string; name: string }[] = [];
-            const nameRow = data[0]; // Obtener la fila con los nombres de los músicos
+            const eventData: { fecha: string; titulo: string; tipo: string; datos: string[] }[] = [];
+    
+            // Obtener las filas con los datos de fecha, título y tipo
+            const fechaRow = data[0];
+            const tituloRow = data[1];
+            const tipoRow = data[2];
+    
+            headers.forEach((header: string, headerIndex: number) => {
+                if (headerIndex >= 3) {
+                    // A partir del cuarto valor del encabezado (el primero es 5)
+                    const evento: { fecha: string; titulo: string; tipo: string; datos: string[] } = {
+                        fecha: fechaRow[headerIndex] as string,
+                        titulo: tituloRow[headerIndex] as string,
+                        tipo: tipoRow[headerIndex] as string,
+                        datos: [],
+                    };
+    
+                    // Obtener los datos adicionales del evento
+                    for (let i = 3; i < data.length; i++) {
+                        evento.datos.push(data[i][headerIndex] as string);
+                    }
+    
+                    eventData.push(evento);
+                }
+            });
+    
+            setEvents(eventData);
+        }
+    };
+    
+    
+    const eventsFilter = () => {
+        if (data && headers) {
+            const eventData: { id: string; name: string }[] = [];
+            const nameRow = data[2]; // Obtener la fila con los nombres de los músicos
 
             headers.forEach((header: string, headerIndex: number) => {
                 if (headerIndex >= 3) {
                     // A partir del cuarto valor del encabezado (el primero es 5)
-                    const musician: { id: string; name: string } = {
+                    const event: { id: string; name: string } = {
                         id: header, // Usar el valor del encabezado como parte del id
                         name: nameRow[header as unknown as number], // Obtener el nombre del músico de la misma columna
                     };
-                    musicianData.push(musician);
+                    eventData.push(event);
                 }
             });
 
-            setMusicians(musicianData);
+            setMusicians(eventData);
         }
-    };
+    }
+        
 
     return (
         <div>
