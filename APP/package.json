@@ -6,9 +6,11 @@
         "tsc": "tsc"
     },
     "dependencies": {
+        "@nextui-org/react": "^2.3.6",
         "@supabase/ssr": "latest",
         "@supabase/supabase-js": "latest",
         "autoprefixer": "10.4.17",
+        "framer-motion": "^11.1.9",
         "geist": "^1.2.1",
         "next": "latest",
         "papaparse": "^5.4.1",
