@@ -16,24 +16,51 @@ const CSVImporter: React.FC = () => {
     useEffect(() => {
         // extractMusiciansData();
         // extractEventsData();
+        console.log(data);
     }, [data]);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+        const file = event.target.files?.[0];
+        if (!file) return;
 
-    Papa.parse<string[]>(file, {
-        complete: (result: Papa.ParseResult<string[]>) => {
-            setData(result.data);
+        Papa.parse<string[]>(file, {
+            complete: (result: Papa.ParseResult<string[]>) => {
+                setData(result.data);
+                setHeaders(result.meta.fields ?? null);
+            },
+            header: true, // Indicates that the CSV file has a header row
+            delimiter: ";", // Sets the correct delimiter for your CSV
+        });
+    };
 
-            // setHeaders(result.meta.fields ?? null);
-        },
-        header: false, // Indicates that the CSV file has a header row
-        delimiter: ";", // Sets the correct delimiter for your CSV
-    });
-};
-
+    const extractMusiciansDataLab = () => {
+        if (data) {
+            const musiciansData: { id: string; name: string }[] = [];
     
+            // Iterar sobre cada fila de datos
+            data.forEach((rowData, index) => {
+                // Ignorar la fila de los encabezados (fila 0)
+                if (index > 0) {
+                    const musicianName = rowData[""]; // La clave vacía corresponde al nombre del músico
+    
+                    // Iterar sobre las claves de la fila (excepto la clave vacía)
+                    Object.keys(rowData).forEach((key) => {
+                        if (key !== "") {
+                            const event: { id: string; name: string } = {
+                                id: key, // La clave es el ID del músico
+                                name: musicianName || "", // Nombre del músico (puede ser vacío)
+                            };
+                            musiciansData.push(event);
+                        }
+                    });
+                }
+            });
+    
+            setMusicians(musiciansData);
+        }
+    };
+    
+
     const extractMusiciansData = () => {
         if (data && headers) {
             const eventData: { id: string; name: string }[] = [];
@@ -93,27 +120,11 @@ const CSVImporter: React.FC = () => {
         }
     };
 
-
     return (
         <div>
             {/* Input para seleccionar un archivo */}
             <input type="file" onChange={handleFileChange} accept=".csv" />
             <div className="flex-1 my-10">
-                {/* Mostrar los datos del archivo CSV */}
-                {data && (
-                    <table>
-                        <tbody>
-                            {data.map((row, rowIndex) => (
-                                <tr key={rowIndex}>
-                                    <p>{row}</p>
-                                    {/* {row.map((cell, cellIndex) => (
-                                        <td key={cellIndex}>{cell}</td>
-                                    ))} */}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
 
                 {/* Mostrar los encabezados del archivo CSV */}
 
