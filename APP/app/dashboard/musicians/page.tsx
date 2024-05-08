@@ -16,25 +16,25 @@ const rows = [
     {
         key: "1",
         display_name: "Tony Reichert",
-        instrument: "CEO",
+        instrument: "Trompeta",
         id: "12",
     },
     {
         key: "2",
         display_name: "Zoey Lang",
-        instrument: "Technical Lead",
+        instrument: "Saxofón",
         id: "24",
     },
     {
         key: "3",
         display_name: "Jane Fisher",
-        instrument: "Senior Developer",
+        instrument: "Violín",
         id: "15",
     },
     {
         key: "4",
         display_name: "William Howard",
-        instrument: "Community Manager",
+        instrument: "Piano",
         id: "8",
     },
 ];
