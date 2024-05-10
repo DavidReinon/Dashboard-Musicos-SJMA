@@ -137,15 +137,26 @@ const CSVImporter: React.FC = () => {
             {/* Input para seleccionar un archivo */}
             <input type="file" onChange={handleFileChange} accept=".csv" />
             <div className="flex-1 my-10">
-
                 {/* Mostrar los encabezados del archivo CSV */}
-
-                {/* {data && (
-                    <div>
-                        <h2>Eventos</h2>
-                        <strong>{events[0].fecha}</strong>
-                        <p>{events[0].titulo}</p>
-                    </div>
+                {data && (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Instrument</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {musicians.map((musician) => (
+                                <tr key={musician.id}>
+                                    <td>{musician.id}</td>
+                                    <td>{musician.display_name}</td>
+                                    <td>{musician.instrument}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 )}
 
                 {musicians.map((musician, index) => (
