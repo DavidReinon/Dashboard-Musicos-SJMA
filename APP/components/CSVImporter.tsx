@@ -63,21 +63,33 @@ const CSVImporter: React.FC = () => {
 
     const extractMusiciansData = () => {
         if (data && headers) {
-            const eventData: { id: string; name: string }[] = [];
-            const nameRow = data[2]; // Obtener la fila con los nombres de los músicos
+            const musicianData: {
+                id: string;
+                display_name: string;
+                instrument: string;
+            }[] = [];
+            const nameRow = data[0];
+            const intrumentRow = data[1]; //Si no funciona => Object.create
 
-            headers.forEach((header: string, headerIndex: number) => {
-                if (headerIndex >= 3) {
-                    // A partir del cuarto valor del encabezado (el primero es 5)
-                    const event: { id: string; name: string } = {
-                        id: header, // Usar el valor del encabezado como parte del id
-                        name: nameRow[header as unknown as number], // Obtener el nombre del músico de la misma columna
+            Object.entries(nameRow).forEach(([key, value]) => {
+                //REVIEW: Preguntar si todos los IDS serán numeros, o si pueden contener letras
+                //para hacer la comprobacion o no.
+                const keyId = parseInt(key);
+                if (!isNaN(keyId) && keyId >= 3) {
+                    const musician: {
+                        id: string;
+                        display_name: string;
+                        instrument: string;
+                    } = {
+                        id: key, // Usar el valor del encabezado como parte del id
+                        display_name: value, // Obtener el valor del nombre del músico
+                        instrument: intrumentRow[key], // Acceder al valor del instrumento basado en el key
                     };
-                    eventData.push(event);
+                    musicianData.push(musician);
                 }
             });
 
-            setMusicians(eventData);
+            setMusicians(musicianData);
         }
     };
 
