@@ -4,20 +4,31 @@ import { useEffect, useState } from "react";
 import Papa from "papaparse";
 
 const CSVImporter: React.FC = () => {
-    const [data, setData] = useState<string[][] | null>(null);
+    const [data, setData] = useState<CsvData[] | null>(null);
     const [headers, setHeaders] = useState<string[] | null>(null);
     const [musicians, setMusicians] = useState<
-        Array<{ id: string; name: string }>
+        Array<{ id: string; display_name: string; instrument: string }>
     >([]);
+    //REVIEW: Preguntar si se puede hacer un array de eventos, donde cada evento tiene un array de musicos
+    /*
+    Informacion de los eventos, y aparte la asistencia de cada musisco al avento,
+    el cual será otro array, por lo cual array de eventos donde en cada evento dentro,
+    hay array de objetos donde cada objeto es un musico con su asistencia(attendance);
+
+    */
     const [events, setEvents] = useState<
-        Array<{ fecha: string; titulo: string; datos: string[] }>
+        Array<{ fecha: string; titulo: string; musiciansAttendance: string[] }>
     >([]);
 
     useEffect(() => {
-        // extractMusiciansData();
+        extractMusiciansData();
         // extractEventsData();
         console.log(data);
     }, [data]);
+
+    interface CsvData {
+        [key: string]: string; // Suponiendo que todas las columnas del CSV son strings
+    }
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -25,41 +36,13 @@ const CSVImporter: React.FC = () => {
 
         Papa.parse<string[]>(file, {
             complete: (result: Papa.ParseResult<string[]>) => {
-                setData(result.data);
+                setData(result.data as unknown as CsvData[]);
                 setHeaders(result.meta.fields ?? null);
             },
             header: true, // Indicates that the CSV file has a header row
             delimiter: ";", // Sets the correct delimiter for your CSV
         });
     };
-
-    const extractMusiciansDataLab = () => {
-        if (data) {
-            const musiciansData: { id: string; name: string }[] = [];
-    
-            // Iterar sobre cada fila de datos
-            data.forEach((rowData, index) => {
-                // Ignorar la fila de los encabezados (fila 0)
-                if (index > 0) {
-                    const musicianName = rowData[""]; // La clave vacía corresponde al nombre del músico
-    
-                    // Iterar sobre las claves de la fila (excepto la clave vacía)
-                    Object.keys(rowData).forEach((key) => {
-                        if (key !== "") {
-                            const event: { id: string; name: string } = {
-                                id: key, // La clave es el ID del músico
-                                name: musicianName || "", // Nombre del músico (puede ser vacío)
-                            };
-                            musiciansData.push(event);
-                        }
-                    });
-                }
-            });
-    
-            setMusicians(musiciansData);
-        }
-    };
-    
 
     const extractMusiciansData = () => {
         if (data && headers) {
@@ -92,43 +75,62 @@ const CSVImporter: React.FC = () => {
             setMusicians(musicianData);
         }
     };
-
+    
     const extractEventsData = () => {
         if (data && headers) {
-            const eventData: {
-                fecha: string;
-                titulo: string;
-                datos: string[];
+            const eventsData: {
+                display_name: string;
+                date: string;
             }[] = [];
 
-            // Obtener las filas con los datos de fecha, título y tipo
-            const fechaRow = data[0];
-            const tituloRow = data[1];
-            const tipoRow = data[2];
+            const musiciansAttendaceData: {
+                musician_id: string;
+                event_id: string;
+                attendace: string;
+            }[] = [];
 
-            headers.forEach((header: string, headerIndex: number) => {
-                if (headerIndex >= 3) {
-                    // A partir del cuarto valor del encabezado (el primero es 5)
-                    const evento: {
-                        fecha: string;
-                        titulo: string;
-                        datos: string[];
-                    } = {
-                        fecha: fechaRow[headerIndex] as string,
-                        titulo: tituloRow[headerIndex] as string,
-                        datos: [],
-                    };
+            data.map((rowObject, indexRowObject) => {
+                //Recorrecome cada fila del archivo CSV
+                if (indexRowObject > 2) {
+                    let fecha: string = "";
+                    let titulo: string = "";
+                    //Recorre cada columna de la fila
+                    Object.entries(rowObject).forEach(([key, value]) => {
+                        if (key === "Fecha") {
+                            fecha = value;
+                            return;
+                        }
+                        if (key === "Titulo") {
+                            titulo = value;
+                            return;
+                        }
+                        if (key === "Ensayo") {
+                            return;
+                        }
 
-                    // Obtener los datos adicionales del evento
-                    for (let i = 3; i < data.length; i++) {
-                        evento.datos.push(data[i][headerIndex] as string);
-                    }
+                        const musicianAttendace: {
+                            musician_id: string;
+                            //Comparando el titulo con la BD y sacando el id
+                            event_id: string;
+                            attendace: string;
+                        } = {
+                            musician_id: key,
+                            event_id: "",
+                            attendace: value,
+                        };
 
-                    eventData.push(evento);
+                        // Add the musicianAttendace object to musiciansAttendaceData array
+                        musiciansAttendaceData.push(musicianAttendace);
+                    }); // Close the missing opening curly brace for Object.entries
+
+                    const event: {
+                        display_name: string;
+                        date: string;
+                    } = { display_name: titulo, date: fecha };
+                    eventsData.push(event);
                 }
-            });
-
-            setEvents(eventData);
+            }); // Close the missing opening curly brace for data.map
+            setEvents(eventsData);
         }
     };
 
@@ -158,13 +160,6 @@ const CSVImporter: React.FC = () => {
                         </tbody>
                     </table>
                 )}
-
-                {musicians.map((musician, index) => (
-                    <div key={index}>
-                        <strong>{musician.id}</strong>
-                        <p>{musician.name}</p>
-                    </div>
-                ))} */}
             </div>
         </div>
     );
