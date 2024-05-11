@@ -3,12 +3,22 @@
 import { useEffect, useState } from "react";
 import Papa from "papaparse";
 
-const CSVImporter: React.FC = () => {
+interface Musician {
+    id: string;
+    display_name: string;
+    instrument: string;
+}
+
+interface Event {
+    fecha: string;
+    titulo: string;
+    musiciansAttendance: string[];
+}
+
+const CSVImporter = () => {
     const [data, setData] = useState<CsvData[] | null>(null);
     const [headers, setHeaders] = useState<string[] | null>(null);
-    const [musicians, setMusicians] = useState<
-        Array<{ id: string; display_name: string; instrument: string }>
-    >([]);
+    const [musicians, setMusicians] = useState<Musician[]>([]);
     //REVIEW: Preguntar si se puede hacer un array de eventos, donde cada evento tiene un array de musicos
     /*
     Informacion de los eventos, y aparte la asistencia de cada musisco al avento,
@@ -16,9 +26,7 @@ const CSVImporter: React.FC = () => {
     hay array de objetos donde cada objeto es un musico con su asistencia(attendance);
 
     */
-    const [events, setEvents] = useState<
-        Array<{ fecha: string; titulo: string; musiciansAttendance: string[] }>
-    >([]);
+    const [events, setEvents] = useState<Event[]>([]);
 
     useEffect(() => {
         extractMusiciansData();
@@ -42,6 +50,8 @@ const CSVImporter: React.FC = () => {
             header: true, // Indicates that the CSV file has a header row
             delimiter: ";", // Sets the correct delimiter for your CSV
         });
+
+        
     };
 
     const extractMusiciansData = () => {
@@ -75,7 +85,7 @@ const CSVImporter: React.FC = () => {
             setMusicians(musicianData);
         }
     };
-    
+
     const extractEventsData = () => {
         if (data && headers) {
             const eventsData: {
