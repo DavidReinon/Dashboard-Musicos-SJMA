@@ -57,10 +57,24 @@ const CSVImporter = () => {
         rows: string[],
         csvClient = csv({ flatKeys: true, ignoreColumns: RegExp("Tipo") })
     ) => {
-        //Nos quedamos solo con las columnas de los eventos (ensayos) ignorado el Tipo
+        //Nos quedamos solo con las columnas de los eventos (ensayos) ignorado columna Tipo con RegExp
         const csvData = rows
             .map((row) =>
                 row.split(",").slice(0, MUSICIAN_START_COL_INDEX).join(",")
+            )
+            .join("\n");
+        //Tranformamos el csv transformado en un array de arrays
+        return csvClient.fromString(csvData);
+    };
+
+    const parseMusiciansAttendance = (
+        rows: string[],
+        csvClient = csv({ flatKeys: true })
+    ) => {
+        //Nos quedamos solo con las columnas de la asistencia de los músicos a los eventos
+        const csvData = rows
+            .map((row) =>
+                row.split(",").slice(MUSICIAN_START_COL_INDEX).join(",")
             )
             .join("\n");
         //Tranformamos el csv transformado en un array de arrays
@@ -82,6 +96,11 @@ const CSVImporter = () => {
         const events = await parseEvents([header, ...eventRows]);
         console.log(events);
 
+        const attendace = await parseMusiciansAttendance([
+            header,
+            ...eventRows,
+        ]);
+        console.log(attendace);
     };
 
     useEffect(() => {
