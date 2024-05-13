@@ -30,25 +30,22 @@ const CSVImporter = () => {
     // const [data, setData] = useState<CsvData[] | null>(null);
     const [headers, setHeaders] = useState<string[] | null>(null);
     const [musicians, setMusicians] = useState<Musician[]>([]);
-    //REVIEW: Preguntar si se puede hacer un array de eventos, donde cada evento tiene un array de musicos
-    /*
-    Informacion de los eventos, y aparte la asistencia de cada musisco al avento,
-    el cual será otro array, por lo cual array de eventos donde en cada evento dentro,
-    hay array de objetos donde cada objeto es un musico con su asistencia(attendance);
-
-    */
     const [events, setEvents] = useState<Event[]>([]);
 
     const parseMusicians = async (
         rows: string[],
         csvClient = csv({ flatKeys: true, output: "csv", noheader: true })
     ) => {
+        //Quitamos las columnas de los eventos que estan vacias
         const csvData = rows
             .map((row) =>
                 row.split(",").slice(MUSICIAN_START_COL_INDEX).join(",")
             )
             .join("\n");
+        //Tranformamos el csv transformado en un array de arrays
         const musiciansCsv: string[][] = await csvClient.fromString(csvData);
+
+        //Mapeamos el array de arrays a un array de objetos con los datos de cada músico
         return musiciansCsv[0].map((_, i) => ({
             id: musiciansCsv[0][i],
             displayName: musiciansCsv[1][i],
@@ -60,23 +57,31 @@ const CSVImporter = () => {
         rows: string[],
         csvClient = csv({ flatKeys: true, ignoreColumns: RegExp("Tipo") })
     ) => {
+        //Nos quedamos solo con las columnas de los eventos (ensayos) ignorado el Tipo
         const csvData = rows
             .map((row) =>
                 row.split(",").slice(0, MUSICIAN_START_COL_INDEX).join(",")
             )
             .join("\n");
+        //Tranformamos el csv transformado en un array de arrays
         return csvClient.fromString(csvData);
     };
 
     const parseCsv = async (csvString: string) => {
+        //Sacamos todas las filas del csv (primera header, resto datos)
         const [header, ...rows] = csvString.split("\n");
 
+        //Sacamos filas de los datos de los músicos
         const musicianRows = rows.slice(0, EVENT_START_ROW_INDEX);
+        //Parseamos los músicos con el header y las filas de los músicos
         const musicians = await parseMusicians([header, ...musicianRows]);
 
+        //Sacamos las filas de los eventos (ensayos)
         const eventRows = rows.slice(EVENT_START_ROW_INDEX);
+        //Parseamos los eventos con el header y las filas de los eventos (ensayos)
         const events = await parseEvents([header, ...eventRows]);
         console.log(events);
+
     };
 
     useEffect(() => {
@@ -91,7 +96,7 @@ const CSVImporter = () => {
 
         const fileData = await file.text();
 
-        const data = await csv({ flatKeys: false }).fromString(fileData);
+        //const data = await csv({ flatKeys: false }).fromString(fileData);
     };
 
     // const extractMusiciansData = () => {
