@@ -1,13 +1,13 @@
 // INDEX PAGE - This is the main page of the app. It is the first page that is loaded when the app is opened.
 // (INDEX > render > APP => Navigation and more)
-import DeployButton from "../components/DeployButton";
-import AuthButton from "../components/AuthButton";
+import DeployButton from "../src/components/DeployButton";
+import AuthButton from "../src/components/AuthButton";
 import { createClient } from "@/utils/supabase/server";
-import ConnectSupabaseSteps from "@/components/tutorial/ConnectSupabaseSteps";
-import SignUpUserSteps from "@/components/tutorial/SignUpUserSteps";
-import Header from "@/components/Header";
+import ConnectSupabaseSteps from "@/src/components/tutorial/ConnectSupabaseSteps";
+import SignUpUserSteps from "@/src/components/tutorial/SignUpUserSteps";
+import Header from "@/src/components/Header";
 
-import CSVImporter from "@/components/CSVImporter";
+import CSVImporter from "@/src/components/CSVImporter";
 
 export default async function Index() {
     const canInitSupabaseClient = () => {
