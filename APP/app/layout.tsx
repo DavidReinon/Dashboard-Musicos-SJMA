@@ -25,7 +25,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="es" className={GeistSans.className}>
+        <html lang="es" className={`${GeistSans.className} dark`}>
             <body className="bg-background text-foreground">
                 <main className="min-h-screen flex flex-col items-center">
                     <Navbar>
