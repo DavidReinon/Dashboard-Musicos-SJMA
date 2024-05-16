@@ -7,11 +7,11 @@ import DataTable from "@/src/components/DataTable";
 const columns = [
     {
         key: "display_name",
-        label: "NAME",
+        label: "NOMBRE",
     },
     {
         key: "instrument",
-        label: "INSTRUMENT",
+        label: "INSTRUMENTO",
     },
     {
         key: "id",
@@ -56,7 +56,7 @@ const musiciansScreen = () => {
             <DataTable
                 columns={columns}
                 data={musicians}
-                emptyContent="Loading..."
+                emptyContent="No se han podido cargar los musicos..."
             />
         </div>
     );
