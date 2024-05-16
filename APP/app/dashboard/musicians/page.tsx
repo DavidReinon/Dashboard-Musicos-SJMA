@@ -1,7 +1,6 @@
-//Musicos
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     Table,
     TableHeader,
@@ -11,33 +10,7 @@ import {
     TableCell,
     getKeyValue,
 } from "@nextui-org/table";
-
-const rows = [
-    {
-        key: "1",
-        display_name: "Tony Reichert",
-        instrument: "Trompeta",
-        id: "12",
-    },
-    {
-        key: "2",
-        display_name: "Zoey Lang",
-        instrument: "Saxofón",
-        id: "24",
-    },
-    {
-        key: "3",
-        display_name: "Jane Fisher",
-        instrument: "Violín",
-        id: "15",
-    },
-    {
-        key: "4",
-        display_name: "William Howard",
-        instrument: "Piano",
-        id: "8",
-    },
-];
+import { fetchMusicianTable } from "@/src/services/supabaseDBQuerys";
 
 const columns = [
     {
@@ -54,29 +27,64 @@ const columns = [
     },
 ];
 
+type MusicianData = {
+    id: string;
+    display_name: string;
+    instrument: string;
+};
+
 const musiciansScreen = () => {
+    const [musicians, setMusicians] = useState<MusicianData[] | null>(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await fetchMusicianTable();
+                const adjustedData = data.map(
+                    (item: {
+                        id: any;
+                        display_name: any;
+                        instrument: any;
+                    }) => ({
+                        id: item.id,
+                        display_name: item.display_name,
+                        instrument: item.instrument?.display_name || "",
+                    })
+                );
+                setMusicians(adjustedData);
+            } catch (error) {
+                console.error("Error fetching musicians data:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
     return (
         <div>
-            <Table aria-label="Example table with dynamic content">
-                <TableHeader columns={columns}>
-                    {(column) => (
-                        <TableColumn key={column.key}>
-                            {column.label}
-                        </TableColumn>
-                    )}
-                </TableHeader>
-                <TableBody items={rows}>
-                    {(item) => (
-                        <TableRow key={item.key}>
-                            {(columnKey) => (
-                                <TableCell>
-                                    {getKeyValue(item, columnKey)}
-                                </TableCell>
-                            )}
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+            {musicians !== null ? (
+                <Table  aria-label="Musicians table">
+                    <TableHeader columns={columns}>
+                        {(column) => (
+                            <TableColumn key={column.key}>
+                                {column.label}
+                            </TableColumn>
+                        )}
+                    </TableHeader>
+                    <TableBody items={musicians}>
+                        {(item: any) => (
+                            <TableRow key={item.id}>
+                                {(columnKey) => (
+                                    <TableCell>
+                                        {getKeyValue(item, columnKey)}
+                                    </TableCell>
+                                )}
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            ) : (
+                <p>Loading...</p>
+            )}
         </div>
     );
 };
