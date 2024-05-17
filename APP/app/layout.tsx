@@ -15,16 +15,14 @@ export const metadata = {
 
 export default function RootLayout({
     children,
-    currentPath,
 }: {
     children: React.ReactNode;
-    currentPath: string;
 }) {
     return (
         <html lang="es" className={`${GeistSans.className} dark`}>
             <body className="bg-background text-foreground">
                 <main className="min-h-screen flex flex-col items-center">
-                    <Navigation currentPath={currentPath}/>
+                    <Navigation />
                     <Providers>{children}</Providers>
                     <footer className="absolute bottom-10 w-full">
                         <p className="text-center text-sm text-gray-500">
