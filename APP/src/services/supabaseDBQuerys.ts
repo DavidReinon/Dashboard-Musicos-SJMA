@@ -25,7 +25,7 @@ const fetchMusicianTable = async () => {
 };
 
 const fetchEventsTable = async () => {
-    const { data, error } = await supabase.from("event").select('*');
+    const { data, error } = await supabase.from("event").select("*");
     if (error) {
         throw new Error(`Error fetching data from event: ${error.message}`);
     }
@@ -33,14 +33,20 @@ const fetchEventsTable = async () => {
 };
 
 const fetchSelectionsTable = async () => {
-    const { data, error } = await supabase.from("selection").select('*');
+    const { data, error } = await supabase.from("selection").select("*");
     if (error) {
-        throw new Error(
-            `Error fetching data from selection: ${error.message}`
-        );
+        throw new Error(`Error fetching data from selection: ${error.message}`);
     }
     return data;
-}
+};
+
+const fetchInstrumentsTable = async () => {
+    const { data, error } = await supabase.from("instrument").select("*");
+    if (error) {
+        throw new Error(`Error fetching data from instrument: ${error.message}`);
+    }
+    return data;
+};
 
 // Function to fetch data from a table
 const fetchFromTable = async (tableName: string) => {
@@ -105,6 +111,7 @@ export {
     fetchMusicianTable,
     fetchEventsTable,
     fetchSelectionsTable,
+    fetchInstrumentsTable,
     fetchFromTable,
     insertIntoTable,
     updateTable,
