@@ -32,6 +32,16 @@ const fetchEventsTable = async () => {
     return data;
 };
 
+const fetchSelectionsTable = async () => {
+    const { data, error } = await supabase.from("selection").select('*');
+    if (error) {
+        throw new Error(
+            `Error fetching data from selection: ${error.message}`
+        );
+    }
+    return data;
+}
+
 // Function to fetch data from a table
 const fetchFromTable = async (tableName: string) => {
     const { data, error } = await supabase.from(tableName).select("*");
@@ -94,6 +104,7 @@ async function deleteFromTable(
 export {
     fetchMusicianTable,
     fetchEventsTable,
+    fetchSelectionsTable,
     fetchFromTable,
     insertIntoTable,
     updateTable,
