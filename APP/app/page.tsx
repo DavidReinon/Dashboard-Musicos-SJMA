@@ -30,9 +30,6 @@ export default async function Index() {
                     {isSupabaseConnected && <AuthButton />}
                 </div>
             </nav>
-            <div>
-                <CSVImporter />
-            </div>
         </div>
     );
 }
