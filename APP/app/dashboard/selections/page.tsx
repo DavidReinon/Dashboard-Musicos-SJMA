@@ -60,6 +60,7 @@ type SelectionData = {
     price_per_musician?: number;
 };
 
+//Selections = Particiones
 const selectionsScreen = () => {
     const [selections, setSelections] = useState<SelectionData[]>([]);
 

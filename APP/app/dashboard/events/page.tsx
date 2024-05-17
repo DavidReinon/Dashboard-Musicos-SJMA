@@ -20,6 +20,7 @@ type EventData = {
     date: Date;
 };
 
+//Events = Ensayos
 const eventsScreen = () => {
     const [events, setEvents] = useState<EventData[]>([]);
 
