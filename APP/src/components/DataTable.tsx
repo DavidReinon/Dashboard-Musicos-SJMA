@@ -37,7 +37,7 @@ const DataTable: React.FC<TableProps> = ({ columns, data, emptyContent }) => {
                             <TableRow key={item.id}>
                                 {(columnKey) => (
                                     <TableCell>
-                                        {getKeyValue(item, columnKey)}
+                                        {getKeyValue(item, columnKey) || "-"}
                                     </TableCell>
                                 )}
                             </TableRow>
