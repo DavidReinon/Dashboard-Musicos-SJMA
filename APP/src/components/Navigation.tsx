@@ -22,7 +22,7 @@ export default function Navigation() {
     ];
 
     return (
-        <Navbar>
+        <Navbar isBordered>
             <NavbarBrand>
                 {/* LOGO */}
                 <p className="font-bold text-inherit">SJMA</p>
