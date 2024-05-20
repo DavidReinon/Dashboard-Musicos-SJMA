@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { fetchSelectionsTable } from "@/src/services/supabaseDBQuerys";
 import DataTable from "@/src/components/DataTable";
+import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 const columns = [
     {
@@ -61,8 +63,9 @@ type SelectionData = {
 };
 
 //Selections = Particiones
-const selectionsScreen = () => {
+const SelectionsScreen: React.FC = () => {
     const [selections, setSelections] = useState<SelectionData[]>([]);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -84,8 +87,18 @@ const selectionsScreen = () => {
                 data={selections}
                 emptyContent="No se han podido cargar las Particiones..."
             />
+            <div className="flex justify-end my-5">
+                <Button
+                    color="primary"
+                    size="lg"
+                    radius="lg"
+                    onClick={() => router.push("selections/create-selection")}
+                >
+                    Nueva Particion
+                </Button>
+            </div>
         </div>
     );
 };
 
-export default selectionsScreen;
+export default SelectionsScreen;
