@@ -39,6 +39,7 @@ const eventsScreen = () => {
     return (
         <div>
             <DataTable
+                title="Ensayos"
                 columns={columns}
                 data={events}
                 emptyContent="No se han podido cargar los ensayos..."
