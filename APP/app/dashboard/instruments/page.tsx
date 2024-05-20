@@ -38,6 +38,7 @@ const instrumentsScreen = () => {
     return (
         <div>
             <DataTable
+                title="Instrumentos"
                 columns={columns}
                 data={instruments}
                 emptyContent="No se han podido cargar los instrumentos..."

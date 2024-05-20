@@ -54,6 +54,7 @@ const musiciansScreen = () => {
     return (
         <div>
             <DataTable
+                title="Musicos"
                 columns={columns}
                 data={musicians}
                 emptyContent="No se han podido cargar los musicos..."

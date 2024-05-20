@@ -17,12 +17,14 @@ interface Column {
 interface TableProps {
     columns: Column[];
     data: any[];
+    title: string;
     emptyContent: string;
 }
 
-const DataTable: React.FC<TableProps> = ({ columns, data, emptyContent }) => {
+const DataTable: React.FC<TableProps> = ({ columns, data, title, emptyContent }) => {
     return (
         <div>
+            <h1 className="my-5 text-3xl font-bold text-left">{title}:</h1>
             {data.length !== 0 ? (
                 <Table aria-label="Data table">
                     <TableHeader columns={columns}>

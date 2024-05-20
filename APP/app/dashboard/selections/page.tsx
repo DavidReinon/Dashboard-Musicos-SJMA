@@ -79,6 +79,7 @@ const selectionsScreen = () => {
     return (
         <div>
             <DataTable
+                title="Particiones"
                 columns={columns}
                 data={selections}
                 emptyContent="No se han podido cargar las Particiones..."
