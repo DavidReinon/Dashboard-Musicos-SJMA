@@ -7,6 +7,7 @@ import {
     Time,
 } from "@internationalized/date"; //Libreria para manejar fechas y horas, la que devuelven los componentes de NextUI
 import { useRouter } from "next/navigation";
+import { useSelection } from "@/src/contexts/selections/createSelectionContext";
 
 const CreateSelectionScreen: React.FC = () => {
     const [name, setName] = useState<string>("");
@@ -18,6 +19,7 @@ const CreateSelectionScreen: React.FC = () => {
     const [repertoire, setRepertoire] = useState<string>("");
     const [dressCode, setDressCode] = useState<string>("");
     const [comments, setComments] = useState<string>("");
+    const { setFormData } = useSelection();
     const router = useRouter();
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,6 +36,17 @@ const CreateSelectionScreen: React.FC = () => {
             dressCode,
             comments,
         });
+        setFormData({
+            name,
+            date,
+            time,
+            totalPrice,
+            numMusicians,
+            otherExpenses,
+            repertoire,
+            dressCode,
+            comments,
+          });
     };
 
     return (
@@ -67,9 +80,9 @@ const CreateSelectionScreen: React.FC = () => {
                     />
                     <Input
                         isRequired
-                    className="m-5"
-                    type="number"
-                    label="Precio Total"
+                        className="m-5"
+                        type="number"
+                        label="Precio Total"
                         value={totalPrice.toString()}
                         onChange={(e) => setTotalPrice(Number(e.target.value))}
                     />
