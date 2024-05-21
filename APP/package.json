@@ -6,6 +6,7 @@
         "tsc": "tsc"
     },
     "dependencies": {
+        "@internationalized/date": "^3.5.4",
         "@nextui-org/link": "^2.0.29",
         "@nextui-org/navbar": "^2.0.30",
         "@nextui-org/react": "^2.3.6",
