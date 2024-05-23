@@ -38,17 +38,17 @@ export type Database = {
         Row: {
           date: string
           display_name: string
-          id: number
+          id: string
         }
         Insert: {
           date: string
           display_name: string
-          id?: number
+          id: string
         }
         Update: {
           date?: string
           display_name?: string
-          id?: number
+          id?: string
         }
         Relationships: []
       }
@@ -56,17 +56,17 @@ export type Database = {
         Row: {
           display_name: string
           id: string
-          order: number | null
+          order: number
         }
         Insert: {
           display_name: string
           id?: string
-          order?: number | null
+          order: number
         }
         Update: {
           display_name?: string
           id?: string
-          order?: number | null
+          order?: number
         }
         Relationships: []
       }
@@ -77,7 +77,7 @@ export type Database = {
           display_name: string
           email: string | null
           id: string
-          instrument: string | null
+          instrument: string
           phone_number: string | null
           points: number | null
         }
@@ -87,7 +87,7 @@ export type Database = {
           display_name: string
           email?: string | null
           id: string
-          instrument?: string | null
+          instrument: string
           phone_number?: string | null
           points?: number | null
         }
@@ -97,7 +97,7 @@ export type Database = {
           display_name?: string
           email?: string | null
           id?: string
-          instrument?: string | null
+          instrument?: string
           phone_number?: string | null
           points?: number | null
         }
@@ -105,12 +105,14 @@ export type Database = {
           {
             foreignKeyName: "public_musician_auth-id_fkey"
             columns: ["auth_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "public_musician_instrument_fkey"
             columns: ["instrument"]
+            isOneToOne: false
             referencedRelation: "instrument"
             referencedColumns: ["id"]
           },
@@ -119,29 +121,31 @@ export type Database = {
       musician_event: {
         Row: {
           attendance: Database["public"]["Enums"]["musician_event_attendance"]
-          event_id: number
+          event_id: string
           musician_id: string
         }
         Insert: {
           attendance: Database["public"]["Enums"]["musician_event_attendance"]
-          event_id: number
+          event_id: string
           musician_id: string
         }
         Update: {
           attendance?: Database["public"]["Enums"]["musician_event_attendance"]
-          event_id?: number
+          event_id?: string
           musician_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "public_musician_event_event_id_fkey"
             columns: ["event_id"]
+            isOneToOne: false
             referencedRelation: "event"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "public_musician-event_musician-id_fkey"
             columns: ["musician_id"]
+            isOneToOne: false
             referencedRelation: "musician"
             referencedColumns: ["id"]
           },
@@ -170,18 +174,21 @@ export type Database = {
           {
             foreignKeyName: "public_musician-selection_instrument_fkey"
             columns: ["instrument"]
+            isOneToOne: false
             referencedRelation: "instrument"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "public_musician-selection_musician-id_fkey"
             columns: ["musician_id"]
+            isOneToOne: false
             referencedRelation: "musician"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "public_musician-selection_selection-id_fkey"
             columns: ["selection_id"]
+            isOneToOne: false
             referencedRelation: "selection"
             referencedColumns: ["id"]
           },
@@ -349,6 +356,7 @@ export type Database = {
           {
             foreignKeyName: "objects_bucketId_fkey"
             columns: ["bucket_id"]
+            isOneToOne: false
             referencedRelation: "buckets"
             referencedColumns: ["id"]
           },
@@ -389,6 +397,7 @@ export type Database = {
           {
             foreignKeyName: "s3_multipart_uploads_bucket_id_fkey"
             columns: ["bucket_id"]
+            isOneToOne: false
             referencedRelation: "buckets"
             referencedColumns: ["id"]
           },
@@ -435,12 +444,14 @@ export type Database = {
           {
             foreignKeyName: "s3_multipart_uploads_parts_bucket_id_fkey"
             columns: ["bucket_id"]
+            isOneToOne: false
             referencedRelation: "buckets"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "s3_multipart_uploads_parts_upload_id_fkey"
             columns: ["upload_id"]
+            isOneToOne: false
             referencedRelation: "s3_multipart_uploads"
             referencedColumns: ["id"]
           },
@@ -627,3 +638,4 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
     : never
+
