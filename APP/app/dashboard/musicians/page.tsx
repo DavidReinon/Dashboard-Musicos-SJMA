@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { fetchMusicianTable } from "@/src/services/supabaseDBQuerys";
+import { supabaseClient } from "@/src/services/supabase";
 import DataTable from "@/src/components/DataTable";
 
 const columns = [
@@ -19,24 +19,34 @@ const columns = [
     },
 ];
 
-type MusicianData = {
-    id: string;
+type Musician = {
     display_name: string;
     instrument: string;
 };
 
+const getIntrumentData = async () => {
+    const { data, error } = await supabaseClient
+        .from("musician")
+        .select(`id, display_name, instrument(display_name)`)
+        .order("display_name");
+    if (error) {
+        throw new Error();
+    }
+    return data;
+};
+
 const musiciansScreen = () => {
-    const [musicians, setMusicians] = useState<any[]>([]);
+    const [musicians, setMusicians] = useState<Musician[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await fetchMusicianTable();
+                const data = await getIntrumentData();
                 const adjustedData = data.map(
                     (item: {
-                        id: any;
-                        display_name: any;
-                        instrument: any;
+                        id: string;
+                        display_name: string;
+                        instrument: { display_name: string } | null;
                     }) => ({
                         id: item.id,
                         display_name: item.display_name,

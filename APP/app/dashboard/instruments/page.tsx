@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { fetchInstrumentsTable } from "@/src/services/supabaseDBQuerys";
+import { supabaseClient } from "@/src/services/supabase";
 import DataTable from "@/src/components/DataTable";
 
 const columns = [
@@ -20,13 +20,24 @@ type InstrumentData = {
     order: number;
 };
 
+const getIntrumentData = async () => {
+    const { data, error } = await supabaseClient
+        .from("instrument")
+        .select(`id, display_name, order`)
+        .order("order");
+    if (error) {
+        throw new Error();
+    }
+    return data;
+};
+
 const instrumentsScreen = () => {
     const [instruments, setInstruments] = useState<InstrumentData[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await fetchInstrumentsTable();
+                const data = await getIntrumentData();
                 setInstruments(data);
             } catch (error) {
                 console.error("Error fetching instruments data:", error);

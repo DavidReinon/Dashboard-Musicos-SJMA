@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { fetchSelectionsTable } from "@/src/services/supabaseDBQuerys";
+import { supabaseClient } from "@/src/services/supabase";
 import DataTable from "@/src/components/DataTable";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ const columns = [
     },
     {
         key: "time",
-        label: "TIEMPO",
+        label: "HORA",
     },
     {
         key: "total_price",
@@ -49,28 +49,28 @@ const columns = [
     },
 ];
 
-type SelectionData = {
-    display_name: string;
-    date: Date;
-    time: string;
-    total_price: number;
-    num_musicians: number;
-    other_expenses?: number;
-    repertoire?: string;
-    dress_code?: string;
-    comments?: string;
-    price_per_musician?: number;
+type Selection = Awaited<ReturnType<typeof getSelectionData>>[number];
+
+const getSelectionData = async () => {
+    const { data, error } = await supabaseClient
+        .from("selection")
+        .select("*")
+        .order("date", { ascending: false });
+    if (error) {
+        throw new Error();
+    }
+    return data;
 };
 
 //Selections = Particiones
 const SelectionsScreen: React.FC = () => {
-    const [selections, setSelections] = useState<SelectionData[]>([]);
+    const [selections, setSelections] = useState<Selection[]>([]);
     const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await fetchSelectionsTable();
+                const data = await getSelectionData();
                 setSelections(data);
             } catch (error) {
                 console.error("Error fetching selections data:", error);

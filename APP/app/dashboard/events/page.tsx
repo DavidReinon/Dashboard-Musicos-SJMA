@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { fetchEventsTable } from "@/src/services/supabaseDBQuerys";
 import DataTable from "@/src/components/DataTable";
+import { supabaseClient } from "@/src/services/supabase";
+import { ToastAction } from "@/src/components/ui/toast";
+import { useToast } from "@/src/components/ui/use-toast";
 
 const columns = [
     {
@@ -15,22 +17,35 @@ const columns = [
     },
 ];
 
-type EventData = {
-    display_name: string;
-    date: Date;
+type Event = Awaited<ReturnType<typeof getEventData>>[number];
+
+const getEventData = async () => {
+    const { data, error } = await supabaseClient
+        .from("event")
+        .select(`id, display_name, date`)
+        .order("date", { ascending: false });
+    if (error) {
+        throw new Error();
+    }
+    return data;
 };
 
 //Events = Ensayos
 const eventsScreen = () => {
-    const [events, setEvents] = useState<EventData[]>([]);
+    const [events, setEvents] = useState<Event[]>([]);
+    const toast = useToast();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await fetchEventsTable() as EventData[];
+                const data = await getEventData();
                 setEvents(data);
             } catch (error) {
-                console.error("Error fetching events data:", error);
+                toast({
+                    id: 'error',
+                    title: "Error.",
+                    description: "No se han podido cargar los ensayos...",
+                });
             }
         };
         fetchData();
