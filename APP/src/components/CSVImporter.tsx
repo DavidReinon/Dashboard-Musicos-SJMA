@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import csv from "csvtojson";
+import { createClient } from "@/utils/supabase/client";
 
 interface Musician {
     id: string;
@@ -31,26 +32,7 @@ const CSVImporter: React.FC = () => {
     const [headers, setHeaders] = useState<string[] | null>(null);
     const [musicians, setMusicians] = useState<Musician[]>([]);
     const [events, setEvents] = useState<Event[]>([]);
-
-    const getInstrumentId = async (instrumentName: string) => {
-        try {
-            const { data, error } = await supabase
-                .from('instrument')
-                .select('id')
-                .eq('name', instrumentName)
-                .single();
-
-            if (error) {
-                //TODO: alert toast
-                console.error(error.message);
-            }
-
-            return data?.id;
-        } catch (error) {
-            console.error('Error fetching instrument id:', error);
-            return null;
-        }
-    };
+   
 
     const parseMusicians = async (
         rows: string[],
