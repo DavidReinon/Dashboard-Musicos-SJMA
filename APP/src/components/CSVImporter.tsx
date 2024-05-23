@@ -32,7 +32,28 @@ const CSVImporter: React.FC = () => {
     const [headers, setHeaders] = useState<string[] | null>(null);
     const [musicians, setMusicians] = useState<Musician[]>([]);
     const [events, setEvents] = useState<Event[]>([]);
-   
+    const supabase = createClient();
+
+    const getInstrumentId = async (instrumentName: string) => {
+        try {
+            const { data, error } = await supabase
+                .from("instrument")
+                .select("id")
+                .eq("display_name", instrumentName)
+                .single();
+
+            if (error) {
+                //TODO: alert toast
+                console.error(error.message);
+                return;
+            }
+            console.log("siuuu\n" + data);
+            return data?.id;
+        } catch (error) {
+            console.error("Error fetching instrument id:", error);
+            return null;
+        }
+    };
 
     const parseMusicians = async (
         rows: string[],
@@ -51,7 +72,7 @@ const CSVImporter: React.FC = () => {
         return musiciansCsv[0].map((_, i) => ({
             id: musiciansCsv[0][i],
             displayName: musiciansCsv[1][i],
-            instrument: musiciansCsv[2][i],
+            instrument: getInstrumentId(musiciansCsv[2][i]),
         }));
     };
 
@@ -83,6 +104,23 @@ const CSVImporter: React.FC = () => {
         return csvClient.fromString(csvData);
     };
 
+    const allMusiciansAttendanceData = async (
+        musicians: any[],
+        events: any[],
+        attendance: any[]
+    ) => {
+        const musiciansAttendanceData = musicians.map((musician, index) => {
+
+            return {
+                id: musician.id,
+                attendance: attendance[index][index],
+                event_id: events[index].id,
+            };
+        });
+
+        return musiciansAttendanceData;
+    };
+
     const parseCsv = async (csvString: string) => {
         //Sacamos todas las filas del csv (primera header, resto datos)
         const [header, ...rows] = csvString.split("\n");
@@ -91,18 +129,21 @@ const CSVImporter: React.FC = () => {
         const musicianRows = rows.slice(0, EVENT_START_ROW_INDEX);
         //Parseamos los músicos con el header y las filas de los músicos
         const musicians = await parseMusicians([header, ...musicianRows]);
+        //TODO: Insert musicians in DB
 
         //Sacamos las filas de los eventos (ensayos)
         const eventRows = rows.slice(EVENT_START_ROW_INDEX);
         //Parseamos los eventos con el header y las filas de los eventos (ensayos)
         const events = await parseEvents([header, ...eventRows]);
+        //TODO: Insert events in DB
         console.log(events);
 
-        const attendace = await parseMusiciansAttendance([
+        const musiciansAttendace = await parseMusiciansAttendance([
             header,
             ...eventRows,
         ]);
-        console.log(attendace);
+        //TODO: Insert musicians attendance in DB with event and musician id
+        console.log(musiciansAttendace);
     };
 
     useEffect(() => {
