@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import csv from "csvtojson";
 
 interface Musician {
@@ -26,11 +26,31 @@ const csvTry = `Id,Fecha,Título,Tipo,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
 dasda2311,19/12/2023,Assaig General - Nadal,Ensayo,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,No convocado,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,No convocado,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente,Pendiente
 `;
 
-const CSVImporter = () => {
+const CSVImporter: React.FC = () => {
     // const [data, setData] = useState<CsvData[] | null>(null);
     const [headers, setHeaders] = useState<string[] | null>(null);
     const [musicians, setMusicians] = useState<Musician[]>([]);
     const [events, setEvents] = useState<Event[]>([]);
+
+    const getInstrumentId = async (instrumentName: string) => {
+        try {
+            const { data, error } = await supabase
+                .from('instrument')
+                .select('id')
+                .eq('name', instrumentName)
+                .single();
+
+            if (error) {
+                //TODO: alert toast
+                console.error(error.message);
+            }
+
+            return data?.id;
+        } catch (error) {
+            console.error('Error fetching instrument id:', error);
+            return null;
+        }
+    };
 
     const parseMusicians = async (
         rows: string[],
