@@ -9,8 +9,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
     metadataBase: new URL(defaultUrl),
-    title: "SJMA - Dashboard",
-    description: "Gestion de la Sociedad Juventud Musical de Albal",
+    title: "SJMA - Particiones",
+    description: "Gestión de particiones de la Sociedad Juventud Musical de Albal",
 };
 
 export default function RootLayout({
