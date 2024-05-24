@@ -31,7 +31,7 @@ function DataTable<T extends { id: string | number }>({
     return (
         <div className="flex flex-col gap-y-4">
             {header || null}
-            <div className="overflow-x-auto max-w-screen-md">
+            <div className="overflow-x-auto">
                 <Table aria-label="Data table" {...other}>
                     <TableHeader columns={columns}>
                         {(column) => (
