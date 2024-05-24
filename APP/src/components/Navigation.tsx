@@ -8,40 +8,30 @@ import {
     Link,
 } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
+import { routes } from "@/src/routes";
+import Logo from "./Logo";
 
 export default function Navigation() {
     const currentPath = usePathname();
 
-    const navItems = [
-        { href: "/", label: "Home" },
-        { href: "/dashboard/musicians", label: "Musicos" },
-        { href: "/dashboard/events", label: "Ensayos" },
-        { href: "/dashboard/selections", label: "Particiones" },
-        { href: "/dashboard/instruments", label: "Instrumentos" },
-        { href: "/dashboard/import-csv", label: "Importar CSV" },
-    ];
-
     return (
         <Navbar isBordered>
             <NavbarBrand>
-                {/* LOGO */}
-                <p className="font-bold text-inherit">SJMA</p>
+                <Logo height={40} />
             </NavbarBrand>
-            <NavbarContent className="m:flex gap-4" justify="center">
-                {navItems.map((item) => (
+            <NavbarContent className="flex gap-4" justify="center">
+                {Object.entries(routes).map(([href, { label }]) => (
                     <NavbarItem
-                        key={item.href}
-                        isActive={currentPath === item.href} // Add this line to apply a style to the active item
+                        key={href}
+                        isActive={currentPath === href} // Add this line to apply a style to the active item
                     >
                         <Link
                             color={
-                                currentPath === item.href
-                                    ? "primary"
-                                    : "foreground"
+                                currentPath === href ? "primary" : "foreground"
                             }
-                            href={item.href}
+                            href={href}
                         >
-                            {item.label}
+                            {label}
                         </Link>
                     </NavbarItem>
                 ))}
