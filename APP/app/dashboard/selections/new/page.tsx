@@ -94,9 +94,7 @@ const NewSelectionScreen: React.FC = () => {
     const insertMusiciansSelection = async (selectionId: number) => {
         const musiciansSelectionData = musiciansSelection.map((musicianId) => {
             const musician = allMusicians.find((m) => m.id === musicianId);
-            console.log(musician);
             const instrumentId = musician!.instrumentId;
-            console.log(instrumentId);
 
             return {
                 selection_id: selectionId,
@@ -123,7 +121,9 @@ const NewSelectionScreen: React.FC = () => {
             title: "Partición creada",
             description: "La particion ha sido creada con exito!",
         });
-        router.push("/dashboard/selections");
+        setTimeout(() => {
+            router.push("/dashboard/selections");
+        }, 1000);
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
