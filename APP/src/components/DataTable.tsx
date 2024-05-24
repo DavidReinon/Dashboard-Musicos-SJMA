@@ -16,51 +16,43 @@ interface Column {
     label: string;
 }
 
-interface DataTableProps extends TableProps {
+interface DataTableProps<T extends { id: string | number }> extends TableProps {
+    header?: React.ReactNode;
     columns: Column[];
-    data: any[];
-    title: string;
-    emptyContent: string;
+    data: T[];
 }
 
-const DataTable: React.FC<DataTableProps> = ({
+function DataTable<T extends { id: string | number }>({
+    header,
     columns,
     data,
-    title,
     ...other
-}) => {
+}: DataTableProps<T>) {
     return (
-        <div>
-            <h1 className="my-5 text-3xl font-bold text-left">{title}:</h1>
-            {data.length !== 0 ? (
-                <Table
-                    aria-label="Data table"
-                    {...other}
-                >
-                    <TableHeader columns={columns}>
-                        {(column) => (
-                            <TableColumn key={column.key}>
-                                {column.label}
-                            </TableColumn>
-                        )}
-                    </TableHeader>
-                    <TableBody items={data}>
-                        {(item: any) => (
-                            <TableRow key={item.id}>
-                                {(columnKey) => (
-                                    <TableCell>
-                                        {getKeyValue(item, columnKey) || "-"}
-                                    </TableCell>
-                                )}
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            ) : (
-                <Spinner label="Loading..." color="primary" />
-            )}
+        <div className="flex flex-col gap-y-4 w-[85%]">
+            {header || null}
+            <Table aria-label="Data table" {...other}>
+                <TableHeader columns={columns}>
+                    {(column) => (
+                        <TableColumn key={column.key}>
+                            {column.label}
+                        </TableColumn>
+                    )}
+                </TableHeader>
+                <TableBody items={data}>
+                    {(item) => (
+                        <TableRow key={item.id}>
+                            {(columnKey) => (
+                                <TableCell>
+                                    {getKeyValue(item, columnKey) || "-"}
+                                </TableCell>
+                            )}
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
         </div>
     );
-};
+}
 
 export default DataTable;
