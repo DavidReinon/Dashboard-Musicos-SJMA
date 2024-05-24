@@ -29,28 +29,30 @@ function DataTable<T extends { id: string | number }>({
     ...other
 }: DataTableProps<T>) {
     return (
-        <div className="flex flex-col gap-y-4 w-[85%]">
+        <div className="flex flex-col gap-y-4">
             {header || null}
-            <Table aria-label="Data table" {...other}>
-                <TableHeader columns={columns}>
-                    {(column) => (
-                        <TableColumn key={column.key}>
-                            {column.label}
-                        </TableColumn>
-                    )}
-                </TableHeader>
-                <TableBody items={data}>
-                    {(item) => (
-                        <TableRow key={item.id}>
-                            {(columnKey) => (
-                                <TableCell>
-                                    {getKeyValue(item, columnKey) || "-"}
-                                </TableCell>
-                            )}
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+            <div className="overflow-x-auto max-w-screen-md">
+                <Table aria-label="Data table" {...other}>
+                    <TableHeader columns={columns}>
+                        {(column) => (
+                            <TableColumn key={column.key}>
+                                {column.label}
+                            </TableColumn>
+                        )}
+                    </TableHeader>
+                    <TableBody items={data}>
+                        {(item) => (
+                            <TableRow key={item.id}>
+                                {(columnKey) => (
+                                    <TableCell>
+                                        {getKeyValue(item, columnKey) || "-"}
+                                    </TableCell>
+                                )}
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
         </div>
     );
 }
