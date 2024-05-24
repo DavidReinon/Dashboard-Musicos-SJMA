@@ -20,21 +20,26 @@ export default function Navigation() {
                 <Logo height={40} />
             </NavbarBrand>
             <NavbarContent className="flex gap-4" justify="center">
-                {Object.entries(routes).map(([href, { label }]) => (
-                    <NavbarItem
-                        key={href}
-                        isActive={currentPath === href} // Add this line to apply a style to the active item
-                    >
-                        <Link
-                            color={
-                                currentPath === href ? "primary" : "foreground"
-                            }
-                            href={href}
-                        >
-                            {label}
-                        </Link>
-                    </NavbarItem>
-                ))}
+                {Object.entries(routes).map(
+                    ([href, { label, showLabelInNavigation }]) =>
+                        showLabelInNavigation && (
+                            <NavbarItem
+                                key={href}
+                                isActive={currentPath === href} // Add this line to apply a style to the active item
+                            >
+                                <Link
+                                    color={
+                                        currentPath === href
+                                            ? "primary"
+                                            : "foreground"
+                                    }
+                                    href={href}
+                                >
+                                    {label}
+                                </Link>
+                            </NavbarItem>
+                        )
+                )}
             </NavbarContent>
         </Navbar>
     );

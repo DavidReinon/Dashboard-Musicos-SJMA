@@ -32,7 +32,7 @@ export default function RootLayout({
                     <Navigation />
                     <Toaster />
                     <div className="flex flex-col w-full gap-y-8 items-start py-8 px-64">
-                        {pathname && (
+                        {pathname && routes[pathname].showLabelInSidebar && (
                             <h1 className="text-4xl font-bold">
                                 {routes[pathname].label}
                             </h1>
