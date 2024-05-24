@@ -2,6 +2,9 @@ import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import { Providers } from "./providers";
 import Navigation from "@/src/components/Navigation";
+import { Toaster } from "@/src/components/ui/toaster";
+import { headers } from "next/headers";
+import { routes } from "@/src/routes";
 
 const defaultUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
@@ -10,7 +13,8 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata = {
     metadataBase: new URL(defaultUrl),
     title: "SJMA - Particiones",
-    description: "Gestión de particiones de la Sociedad Juventud Musical de Albal",
+    description:
+        "Gestión de particiones de la Sociedad Juventud Musical de Albal",
 };
 
 export default function RootLayout({
@@ -18,28 +22,23 @@ export default function RootLayout({
 }: {
     children: React.ReactNode;
 }) {
+    const headersList = headers();
+    const pathname = headersList.get("x-pathname");
+
     return (
         <html lang="es" className={`${GeistSans.className} dark`}>
             <body className="bg-background text-foreground">
                 <main className="min-h-screen flex flex-col items-center">
                     <Navigation />
-                    <Providers>{children}</Providers>
-                    <footer className="absolute bottom-10 w-full">
-                        <p className="text-center text-sm text-gray-500">
-                            © {new Date().getFullYear()} David Reinón
-                            <a
-                                href="https://github.com/davidreinon"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <img
-                                    src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-                                    alt="GitHub Logo"
-                                    className="w-6 h-6 inline-block ml-2"
-                                />
-                            </a>
-                        </p>
-                    </footer>
+                    <Toaster />
+                    <div className="flex flex-col w-full gap-y-8 items-start py-8 px-64">
+                        {pathname && (
+                            <h1 className="text-4xl font-bold">
+                                {routes[pathname].label}
+                            </h1>
+                        )}
+                        <Providers>{children}</Providers>
+                    </div>
                 </main>
             </body>
         </html>
