@@ -1,37 +1,49 @@
-// INDEX PAGE - This is the main page of the app. It is the first page that is loaded when the app is opened.
-// (INDEX > render > APP => Navigation and more)
-import DeployButton from "../components/DeployButton";
-import AuthButton from "../components/AuthButton";
-import { createClient } from "@/utils/supabase/server";
-import ConnectSupabaseSteps from "@/components/tutorial/ConnectSupabaseSteps";
-import SignUpUserSteps from "@/components/tutorial/SignUpUserSteps";
-import Header from "@/components/Header";
-
-import CSVImporter from "@/components/CSVImporter";
+import { Card, CardBody } from "@nextui-org/react";
 
 export default async function Index() {
-    const canInitSupabaseClient = () => {
-        // This function is just for the interactive tutorial.
-        // Feel free to remove it once you have Supabase connected.
-        try {
-            createClient();
-            return true;
-        } catch (e) {
-            return false;
-        }
-    };
+    // const canInitSupabaseClient = () => {
+    //     // This function is just for the interactive tutorial.
+    //     // Feel free to remove it once you have Supabase connected.
+    //     try {
+    //         createClient();
+    //         return true;
+    //     } catch (e) {
+    //         return false;
+    //     }
+    // };
 
-    const isSupabaseConnected = canInitSupabaseClient();
+    // const isSupabaseConnected = canInitSupabaseClient();
 
     return (
-        <div className="flex-1 w-full flex flex-col gap-20 items-center">
-            <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-                <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
-                    {isSupabaseConnected && <AuthButton />}
-                </div>
-            </nav>
-            <div>
-                <CSVImporter />
+        <div className="flex flex-col items-center justify-center">
+            <h1 className="text-2xl font-bold mb-16">
+                Bienvenido al Dashboard de Músicos
+            </h1>
+            <h4 className="text-9xl font-bold justify-center">🎼🎺🎹🥁</h4>
+            <div className="flex flex-col items-center">
+                <Card className="mt-20">
+                    <CardBody>
+                        <p>
+                            Navega por las distintas pantallas para poder ver
+                            el estado actual de la banda.
+                        </p>
+                    </CardBody>
+                </Card>
+                <Card className="mt-3">
+                    <CardBody>
+                        <p>Crea nuevas particiones.</p>
+                    </CardBody>
+                </Card>
+                <Card className="mt-3">
+                    <CardBody>
+                        <p>Exporta información actualizada de la Banda.</p>
+                    </CardBody>
+                </Card>
+                <Card className="mt-3">
+                    <CardBody>
+                        <p>Nuevas funcinalidades pronto...</p>
+                    </CardBody>
+                </Card>
             </div>
         </div>
     );

@@ -8,7 +8,7 @@ import { useMount } from "react-use";
 import { Tables } from "@/src/types/supabase";
 import { Spinner } from "@nextui-org/react";
 
-type Event = Tables<"event">;
+type Instrument = Tables<"instrument">;
 
 // Define las columnas fuera del componente
 const columns = [
@@ -17,28 +17,28 @@ const columns = [
         label: "NOMBRE",
     },
     {
-        key: "date",
-        label: "FECHA",
+        key: "order",
+        label: "ORDEN",
     },
 ];
 
-const EventsScreen = () => {
-    const [events, setEvents] = useState<Event[]>([]);
+const InstrumentsScreen = () => {
+    const [instruments, setInstruments] = useState<Instrument[]>([]);
     const [loading, setLoading] = useState(true);
     const { toast } = useToast();
 
-    useMount(async () => setEvents(await getEventData(toast)));
+    useMount(async () => setInstruments(await getInstrumentData(toast)));
 
-    const getEventData = async (toast: ToastType): Promise<Event[]> => {
+    const getInstrumentData = async (toast: ToastType): Promise<Instrument[]> => {
         const { data, error } = await supabaseClient
-            .from("event")
-            .select(`id, display_name, date`)
-            .order("date", { ascending: false });
+            .from("instrument")
+            .select(`id, display_name, order`)
+            .order("order");
 
         if (error) {
             toast({
                 title: "Error.",
-                description: "No se han podido cargar los ensayos...",
+                description: "No se han podido cargar los instrumentos...",
             });
             setLoading(false);
             return [];
@@ -53,10 +53,10 @@ const EventsScreen = () => {
             {loading ? (
                 <Spinner size="lg" />
             ) : (
-                <DataTable title="Ensayos" columns={columns} data={events} />
+                <DataTable title="Instrumentos" columns={columns} data={instruments} />
             )}
         </>
     );
 };
 
-export default EventsScreen;
+export default InstrumentsScreen;
