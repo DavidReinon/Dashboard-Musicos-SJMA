@@ -95,7 +95,7 @@ const SelectionsScreen: React.FC = () => {
                                 size="lg"
                                 radius="lg"
                                 onClick={() =>
-                                    router.push("selections/create-selection")
+                                    router.push("selections/new")
                                 }
                             >
                                 Nueva Particion
