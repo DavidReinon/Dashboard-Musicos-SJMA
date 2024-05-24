@@ -24,10 +24,6 @@ const columns = [
         key: "instrument",
         label: "INSTRUMENTO",
     },
-    {
-        key: "id",
-        label: "ID",
-    },
 ];
 
 const MusiciansScreen = () => {
