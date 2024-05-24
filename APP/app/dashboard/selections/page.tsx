@@ -1,10 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { supabaseClient } from "@/src/services/supabase";
 import DataTable from "@/src/components/DataTable";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
+import { useToast, type ToastType } from "@/src/components/ui/use-toast";
+import { useMount } from "react-use";
+import { Tables } from "@/src/types/supabase";
+import { Spinner } from "@nextui-org/react";
+
+type Selection = Tables<"selection">;
 
 const columns = [
     {
@@ -49,55 +55,59 @@ const columns = [
     },
 ];
 
-type Selection = Awaited<ReturnType<typeof getSelectionData>>[number];
-
-const getSelectionData = async () => {
-    const { data, error } = await supabaseClient
-        .from("selection")
-        .select("*")
-        .order("date", { ascending: false });
-    if (error) {
-        throw new Error();
-    }
-    return data;
-};
-
-//Selections = Particiones
 const SelectionsScreen: React.FC = () => {
     const [selections, setSelections] = useState<Selection[]>([]);
+    const [loading, setLoading] = useState(true);
+    const { toast } = useToast();
     const router = useRouter();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getSelectionData();
-                setSelections(data);
-            } catch (error) {
-                console.error("Error fetching selections data:", error);
-            }
-        };
-        fetchData();
-    }, []);
+    useMount(async () => setSelections(await getSelectionData(toast)));
+
+    const getSelectionData = async (toast: ToastType): Promise<Selection[]> => {
+        const { data, error } = await supabaseClient
+            .from("selection")
+            .select("*")
+            .order("date", { ascending: false });
+
+        if (error) {
+            toast({
+                title: "Error.",
+                description: "No se han podido cargar las selecciones...",
+            });
+            setLoading(false);
+            return [];
+        }
+
+        setLoading(false);
+        return data || [];
+    };
 
     return (
-        <div>
-            <DataTable
-                title="Particiones"
-                columns={columns}
-                data={selections}
-                emptyContent="No se han podido cargar las Particiones..."
-            />
-            <div className="flex justify-end my-5">
-                <Button
-                    color="primary"
-                    size="lg"
-                    radius="lg"
-                    onClick={() => router.push("selections/create-selection")}
-                >
-                    Nueva Particion
-                </Button>
-            </div>
-        </div>
+        <>
+            {loading ? (
+                <Spinner size="lg" />
+            ) : (
+                <DataTable
+                    header={
+                        <div className="flex w-full justify-end">
+                            <Button
+                                color="primary"
+                                size="lg"
+                                radius="lg"
+                                onClick={() =>
+                                    router.push("selections/create-selection")
+                                }
+                            >
+                                Nueva Particion
+                            </Button>
+                        </div>
+                    }
+                    title="Particiones"
+                    columns={columns}
+                    data={selections}
+                />
+            )}
+        </>
     );
 };
 

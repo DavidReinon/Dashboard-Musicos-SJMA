@@ -1,9 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { supabaseClient } from "@/src/services/supabase";
+import React, { useState } from "react";
 import DataTable from "@/src/components/DataTable";
+import { supabaseClient } from "@/src/services/supabase";
+import { useToast, type ToastType } from "@/src/components/ui/use-toast";
+import { useMount } from "react-use";
+import { Tables } from "@/src/types/supabase";
+import { Spinner } from "@nextui-org/react";
 
+type Instrument = Tables<"instrument">;
+
+// Define las columnas fuera del componente
 const columns = [
     {
         key: "display_name",
@@ -15,47 +22,41 @@ const columns = [
     },
 ];
 
-type InstrumentData = {
-    display_name: string;
-    order: number;
-};
+const InstrumentsScreen = () => {
+    const [instruments, setInstruments] = useState<Instrument[]>([]);
+    const [loading, setLoading] = useState(true);
+    const { toast } = useToast();
 
-const getIntrumentData = async () => {
-    const { data, error } = await supabaseClient
-        .from("instrument")
-        .select(`id, display_name, order`)
-        .order("order");
-    if (error) {
-        throw new Error();
-    }
-    return data;
-};
+    useMount(async () => setInstruments(await getInstrumentData(toast)));
 
-const instrumentsScreen = () => {
-    const [instruments, setInstruments] = useState<InstrumentData[]>([]);
+    const getInstrumentData = async (toast: ToastType): Promise<Instrument[]> => {
+        const { data, error } = await supabaseClient
+            .from("instrument")
+            .select(`id, display_name, order`)
+            .order("order");
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getIntrumentData();
-                setInstruments(data);
-            } catch (error) {
-                console.error("Error fetching instruments data:", error);
-            }
-        };
-        fetchData();
-    }, []);
+        if (error) {
+            toast({
+                title: "Error.",
+                description: "No se han podido cargar los instrumentos...",
+            });
+            setLoading(false);
+            return [];
+        }
+
+        setLoading(false);
+        return data || [];
+    };
 
     return (
-        <div>
-            <DataTable
-                title="Instrumentos"
-                columns={columns}
-                data={instruments}
-                emptyContent="No se han podido cargar los instrumentos..."
-            />
-        </div>
+        <>
+            {loading ? (
+                <Spinner size="lg" />
+            ) : (
+                <DataTable title="Instrumentos" columns={columns} data={instruments} />
+            )}
+        </>
     );
 };
 
-export default instrumentsScreen;
+export default InstrumentsScreen;

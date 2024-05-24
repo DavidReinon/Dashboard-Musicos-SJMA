@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import DataTable from "@/src/components/DataTable";
 import { supabaseClient } from "@/src/services/supabase";
-import { ToastAction } from "@/src/components/ui/toast";
-import { useToast } from "@/src/components/ui/use-toast";
+import { useToast, type ToastType } from "@/src/components/ui/use-toast";
+import { useMount } from "react-use";
+import { Tables } from "@/src/types/supabase";
+import { Spinner } from "@nextui-org/react";
 
+type Event = Tables<"event">;
+
+// Define las columnas fuera del componente
 const columns = [
     {
         key: "display_name",
@@ -17,50 +22,41 @@ const columns = [
     },
 ];
 
-type Event = Awaited<ReturnType<typeof getEventData>>[number];
-
-const getEventData = async () => {
-    const { data, error } = await supabaseClient
-        .from("event")
-        .select(`id, display_name, date`)
-        .order("date", { ascending: false });
-    if (error) {
-        throw new Error();
-    }
-    return data;
-};
-
-//Events = Ensayos
-const eventsScreen = () => {
+const EventsScreen = () => {
     const [events, setEvents] = useState<Event[]>([]);
-    const toast = useToast();
+    const [loading, setLoading] = useState(true);
+    const { toast } = useToast();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getEventData();
-                setEvents(data);
-            } catch (error) {
-                toast({
-                    id: 'error',
-                    title: "Error.",
-                    description: "No se han podido cargar los ensayos...",
-                });
-            }
-        };
-        fetchData();
-    }, []);
+    useMount(async () => setEvents(await getEventData(toast)));
+
+    const getEventData = async (toast: ToastType): Promise<Event[]> => {
+        const { data, error } = await supabaseClient
+            .from("event")
+            .select(`id, display_name, date`)
+            .order("date", { ascending: false });
+
+        if (error) {
+            toast({
+                title: "Error.",
+                description: "No se han podido cargar los ensayos...",
+            });
+            setLoading(false);
+            return [];
+        }
+
+        setLoading(false);
+        return data || [];
+    };
 
     return (
-        <div>
-            <DataTable
-                title="Ensayos"
-                columns={columns}
-                data={events}
-                emptyContent="No se han podido cargar los ensayos..."
-            />
-        </div>
+        <>
+            {loading ? (
+                <Spinner size="lg" />
+            ) : (
+                <DataTable title="Ensayos" columns={columns} data={events} />
+            )}
+        </>
     );
 };
 
-export default eventsScreen;
+export default EventsScreen;
