@@ -31,7 +31,7 @@ export default function RootLayout({
                 <main className="min-h-screen flex flex-col items-center">
                     <Navigation />
                     <Toaster />
-                    <div className="flex flex-col w-full gap-y-8 items-start py-8 px-64">
+                    <div className="flex flex-col w-full gap-y-8 py-8 px-64">
                         {pathname && routes[pathname].showLabelInSidebar && (
                             <h1 className="text-4xl font-bold">
                                 {routes[pathname].label}
