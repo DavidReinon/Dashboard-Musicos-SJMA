@@ -11,3 +11,6 @@ Crear un Dashboard con la principal funcion de ayudar y agilizar a la junta en c
 ## 💻 Acceso de forma local
 En esta primera versión la web no esta desplegada con hostname (url), y no podrá ser utilizada por cualquier persona. Solo de forma interna instanciandola localmente.
 En un futuro se desplegará en la nube con una seríe de funciones de autenticación para limitar el acceso solo a administradores
+
+## 📹 Video demo
+[Link Video Demo](https://floridauniversitaria-my.sharepoint.com/:v:/g/personal/darega_floridauniversitaria_es/Ea2-pJ41865NoJXb98Ovb0EBxQfjOIIhpbT1qrrCOC5GBw?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=dnxtIW)
