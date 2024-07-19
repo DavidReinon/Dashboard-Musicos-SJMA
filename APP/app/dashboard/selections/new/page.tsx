@@ -71,7 +71,7 @@ const NewSelectionScreen: React.FC = () => {
                 date: formData.date!.toString(),
                 total_price: Number(formData.totalPrice!),
                 num_musicians: Number(formData.numMusicians!),
-                other_expenses: Number(formData.otherExpenses!),
+                other_expenses: Number(formData.otherExpenses!) || 0,
                 repertoire: formData.repertoire,
                 dress_code: formData.dressCode,
                 comments: formData.comments,
